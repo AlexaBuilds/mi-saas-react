@@ -69,7 +69,7 @@ function ChatArea() {
     try {
       // 2. CONEXIÓN AL GUARDAESPALDAS (NETLIFY) EN LUGAR DE GROQ DIRECTO
       // Modificamos la URL para que apunte a tu función segura en Netlify
-      const URL = "https://TU_SITIO_DE_NETLIFY.netlify.app/.netlify/functions/chat";
+      const URL = "https://mi-saas-react.netlify.app/.netlify/functions/chat";
 
       const respuesta = await fetch(URL, {
         method: "POST",
