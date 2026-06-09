@@ -67,9 +67,9 @@ function ChatArea() {
     setTextoInput(""); 
 
     try {
-      // 2. CONEXIÓN AL GUARDAESPALDAS (TU AWS) EN LUGAR DE GROQ DIRECTO
-      // Modificamos la URL para que apunte al puerto 5000 de tu servidor
-      const URL = "http://52.212.109.61:5000/api/chat";
+      // 2. CONEXIÓN AL GUARDAESPALDAS (NETLIFY) EN LUGAR DE GROQ DIRECTO
+      // Modificamos la URL para que apunte a tu función segura en Netlify
+      const URL = "https://TU_SITIO_DE_NETLIFY.netlify.app/.netlify/functions/chat";
 
       const respuesta = await fetch(URL, {
         method: "POST",
