@@ -20,7 +20,7 @@
 //                         <input
 //                         type='text'
 //                         id='mensaje-input'
-//                         placeholder='Escribe tu pregunta aquí...'
+//                         placeholder='¿En qué te puedo ayudar?
 //                         autoComplete='off'
 //                         />
 //                         <button type='submit'>Enviar</button>
@@ -67,28 +67,24 @@ function ChatArea() {
     setTextoInput(""); 
 
     try {
-      // 2. CONEXIÓN AL CEREBRO DE GROQ
-      // ⚠️ IMPORTANTE: Pega aquí tu API Key de Groq (suele empezar por 'gsk_')
-      const apiKey = import.meta.env.VITE_GROQ_API_KEY;
-      
-      const URL = "https://api.groq.com/openai/v1/chat/completions";
+      // 2. CONEXIÓN AL GUARDAESPALDAS (TU AWS) EN LUGAR DE GROQ DIRECTO
+      // Modificamos la URL para que apunte al puerto 5000 de tu servidor
+      const URL = "http://52.212.109.61:5000/api/chat";
 
       const respuesta = await fetch(URL, {
         method: "POST",
         headers: { 
-          "Content-Type": "application/json",
-          // Groq exige que la clave vaya aquí, como un "Bearer token"
-          "Authorization": `Bearer ${apiKey}`
+          "Content-Type": "application/json"
+          // 🔒 ¡MIRA ESTO! Ya no hay cabecera Authorization aquí. 
+          // Tu código de React queda completamente limpio de llaves y secretos.
         },
         body: JSON.stringify({
-          model: "llama-3.1-8b-instant", // Modelo de código abierto ultra rápido
+          model: "llama-3.1-8b-instant",
           messages: [
-            // Le damos algo de contexto inicial
             { role: "system", content: "Eres un asistente experto en programación web y React. Responde en español de forma clara y concisa." },
-            // Le enviamos la pregunta del usuario
             { role: "user", content: promptUsuario }
           ],
-          temperature: 0.7 // Nivel de creatividad
+          temperature: 0.7
         })
       });
 
@@ -142,7 +138,7 @@ function ChatArea() {
           <input
             type="text"
             id="mensaje-input"
-            placeholder="Escribe tu prompt para Groq..."
+            placeholder="¿En qué te puedo ayudar?"
             autoComplete="off"
             value={textoInput}
             onChange={(evento) => setTextoInput(evento.target.value)}
