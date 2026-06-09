@@ -78,7 +78,7 @@ function ChatArea() {
         headers: { 
           "Content-Type": "application/json",
           // Groq exige que la clave vaya aquí, como un "Bearer token"
-          "Authorization": `Bearer ${API_KEY}` 
+          "Authorization": `Bearer ${apiKey}`
         },
         body: JSON.stringify({
           model: "llama-3.1-8b-instant", // Modelo de código abierto ultra rápido
