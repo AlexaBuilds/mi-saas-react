@@ -15,7 +15,7 @@ function ChatArea() {
   const [listaMensajes, setListaMensajes] = useState([
     { 
       rol: "ia", 
-      texto: "Hola. Soy OmniBot, tu agente de IA especializado en el ecosistema de nuestro Omnichannel Connector. Estoy conectado en tiempo real con el ERP, tus Proveedores y tu Marketplace. ¿Qué métricas de stock, márgenes de beneficio o estado de Cron Jobs deseas auditar hoy?" 
+      texto: "Hola. Soy OmniBot, tu agente de IA especializado en el ecosistema de nuestro Omnichannel Connector. Estoy conectado en tiempo real con tu Ecommerce, el ERP, tus Proveedores y tu Marketplace. ¿Qué métricas de stock, márgenes de beneficio o estado de Cron Jobs deseas auditar hoy?" 
     }
   ]);
 
@@ -123,7 +123,7 @@ function ChatArea() {
           <input
             type="text"
             id="mensaje-input"
-            placeholder="Pregúntame sobre tus Proveedores, Marketplace o ERP..."
+            placeholder="Pregúntame sobre tu Ecommerce, Proveedores, Marketplace o ERP..."
             autoComplete="off"
             value={textoInput}
             onChange={(evento) => setTextoInput(evento.target.value)}
