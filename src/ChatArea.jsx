@@ -1,36 +1,3 @@
-// //COMPONENTE: : ChatArea (Zona derecha principal)
-// //1. Importar componentes hijos
-// import Mensaje from './Mensaje';
-
-// function ChatArea(){
-//     return (
-//         // La etiqueta <main> envuelve toda la parte derecha de la pantalla
-//         <main className='chat-area'>
-//             {/* Zona 1. : Historial de mensajes*/}
-//             <section className='mensajes-container' id='caja-mensajes'>
-//                 {/*Aquí llamamos a nuestro componente <Mensaje /> como
-//                 si fuera una etiqueta HTML nueva*/}
-//                 <Mensaje rol="ia" texto="¡Hola! Soy IA Master. ¿En que te ayudo hoy en React?" />
-//                 <Mensaje rol="usuario" texto="Quiero aprender a usar componentes."/>
-//                 <Mensaje rol="ia" texto="¡Excelente elección! Acabas de reutilizar código"/>
-//             </section>
-//                 {/*Zona 2. LA CAJA PARA ESCRIBIR (El input) */}
-//                 <footer className='input-area'>
-//                     <form className='chat-form'>
-//                         <input
-//                         type='text'
-//                         id='mensaje-input'
-//                         placeholder='¿En qué te puedo ayudar?
-//                         autoComplete='off'
-//                         />
-//                         <button type='submit'>Enviar</button>
-//                     </form>
-//                 </footer>
-//         </main>
-//     )
-// }
-// export default ChatArea;
-
 // ==========================================
 // COMPONENTE: ChatArea (Zona derecha principal)
 // ==========================================
@@ -38,50 +5,45 @@
 import { useState } from 'react';
 import Mensaje from './Mensaje';
 
+// ✂️ BORRADO: Ya no importamos el logo aquí porque se movió al Sidebar
+
 function ChatArea() {
   
   // ==========================================
   // 🧠 ZONA DE MEMORIA (ESTADOS)
   // ==========================================
-  
   const [textoInput, setTextoInput] = useState("");
 
   const [listaMensajes, setListaMensajes] = useState([
-    { rol: "ia", texto: "¡Hola! Soy IA Master. Conectado a la velocidad de Groq. ¿En qué te ayudo hoy?" }
+    { 
+      rol: "ia", 
+      texto: "Hola. Soy OmniBot, tu agente de IA especializado en el ecosistema omnicanal de Ez-Find Goods. Estoy conectado en tiempo real con Odoo 18, BigBuy y TEMU Seller Marketplace. ¿Qué métricas de stock, márgenes de beneficio o estado de Cron Jobs deseas auditar hoy?" 
+    }
   ]);
 
   // ==========================================
-  // ⚙️ ZONA DE LÓGICA (ACCIONES - GROQ API)
+  // ⚙️ ZONA DE LÓGICA (ACCIONES - NETLIFY FUNCTIONS)
   // ==========================================
-  
   const manejarEnvio = async (evento) => {
     evento.preventDefault();
     if (textoInput.trim() === "") return;
 
-    // 1. Guardamos el texto del usuario
     const promptUsuario = textoInput;
     const mensajeUsuario = { rol: "usuario", texto: promptUsuario };
     
-    // Mostramos el mensaje del usuario inmediatamente y el "Pensando..."
     setListaMensajes([...listaMensajes, mensajeUsuario, { rol: "ia", texto: "Procesando a la velocidad de la luz..." }]);
     setTextoInput(""); 
 
     try {
-      // 2. CONEXIÓN AL GUARDAESPALDAS (NETLIFY) EN LUGAR DE GROQ DIRECTO
-      // Modificamos la URL para que apunte a tu función segura en Netlify
       const URL = "https://mi-saas-react.netlify.app/.netlify/functions/chat";
 
       const respuesta = await fetch(URL, {
         method: "POST",
-        headers: { 
-          "Content-Type": "application/json"
-          // 🔒 ¡MIRA ESTO! Ya no hay cabecera Authorization aquí. 
-          // Tu código de React queda completamente limpio de llaves y secretos.
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "llama-3.1-8b-instant",
           messages: [
-            { role: "system", content: "Eres un asistente experto en programación web y React. Responde en español de forma clara y concisa." },
+            { role: "system", content: "Eres OmniBot, un agente de IA ultra-especializado en la gestión de e-commerce y conectores omnicanal de Ez-Find Goods. Tu conocimiento se basa en la sincronización en tiempo real entre BigBuy (catálogo y stock), Odoo 18 (ERP centralizador) y TEMU Seller Marketplace. Ayudas al usuario a entender problemas de inventario, optimización de márgenes de beneficio, estados de los Cron Jobs y logística automatizada. Tus respuestas deben ser profesionales, analíticas, corporativas y directas. Habla siempre en español." },
             { role: "user", content: promptUsuario }
           ],
           temperature: 0.7
@@ -90,26 +52,20 @@ function ChatArea() {
 
       const datos = await respuesta.json();
       
-      // Escudo de seguridad por si falla la clave
       if (!respuesta.ok) {
-        console.error("Error de Groq:", datos);
-        throw new Error(datos.error?.message || "La API de Groq rechazó la conexión");
+        throw new Error(datos.error?.message || "La API rechazó la conexión");
       }
 
-      // 3. EXTRAEMOS LA RESPUESTA DE GROQ
-      // La ruta para encontrar el texto en Groq/OpenAI es esta:
       const textoIA = datos.choices[0].message.content;
       const mensajeIA = { rol: "ia", texto: textoIA };
       
-      // 4. ACTUALIZAMOS LA PANTALLA
       setListaMensajes((listaActual) => {
         const listaSinPensando = listaActual.slice(0, -1);
         return [...listaSinPensando, mensajeIA];
       });
 
     } catch (error) {
-      console.error("Error conectando con Groq:", error);
-      
+      console.error("Error conectando:", error);
       setListaMensajes((listaActual) => {
         const listaSinPensando = listaActual.slice(0, -1);
         return [...listaSinPensando, { rol: "ia", texto: `❌ Error neuronal: ${error.message}` }];
@@ -118,32 +74,55 @@ function ChatArea() {
   };
 
   // ==========================================
-  // 🎨 ZONA VISUAL (LO QUE VE EL USUARIO)
+  // 🎨 ZONA VISUAL (CUMPLIENDO LA OPCIÓN SELECCIONADA)
   // ==========================================
   return (
     <main className="chat-area">
       
+      {/* Cabecera Superior con Fondo Azul Cian */}
+      <header className="chat-header">
+        <div className="chat-header-title">
+          
+          {/* ✂️ BORRADO: Quitamos la etiqueta <img> para que el logo no aparezca en la barra azul */}
+          
+          <h3>OmniBot Core</h3>
+        </div>
+        <span className="chat-header-status">● SINCRONIZADO</span>
+      </header>
+
+      {/* Contenedor de burbujas enmarcadas en Azul Cian */}
       <section className="mensajes-container" id="caja-mensajes">
-        {listaMensajes.map((msg, indice) => (
-          <Mensaje 
-            key={indice} 
-            rol={msg.rol} 
-            texto={msg.texto} 
-          />
-        ))}
+        {listaMensajes.map((msg, indice) => {
+          if (msg.rol === "ia" && indice === 0) {
+            return (
+              <div key={indice} className="msg-ia-bienvenida">
+                <span className="tag-sistema">OmniBot</span>
+                <p>{msg.texto}</p>
+              </div>
+            );
+          }
+
+          return (
+            <div key={indice} className={msg.rol === "usuario" ? "msg-usuario" : "msg-ia"}>
+              {msg.rol === "ia" && <span className="tag-sistema">OmniBot</span>}
+              <p>{msg.texto}</p>
+            </div>
+          );
+        })}
       </section>
 
+      {/* Formulario Inferior - Barra Ancha en Degradado Azul Píldora */}
       <footer className="input-area">
         <form className="chat-form" onSubmit={manejarEnvio}>
           <input
             type="text"
             id="mensaje-input"
-            placeholder="¿En qué te puedo ayudar?"
+            placeholder="Pregúntame sobre BigBuy, TEMU o Odoo..."
             autoComplete="off"
             value={textoInput}
             onChange={(evento) => setTextoInput(evento.target.value)}
           />
-          <button type="submit">Enviar</button>
+          <button type="submit" disabled={textoInput.trim() === ""}>Enviar —&gt;</button>
         </form>
       </footer>
 

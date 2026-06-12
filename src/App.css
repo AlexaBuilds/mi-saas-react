@@ -1,4 +1,20 @@
-/* CSS PROYECTO SAAS */
+/* ========================================================
+   🚀 INYECCIÓN DE TAILWIND V4 Y CONFIGURACIÓN DE MARCA
+   ======================================================== */
+@import "tailwindcss";
+
+@theme {
+  --color-ez-blue: #29bbe3;
+  --color-ez-orange: #fd601d;
+}
+
+/* ========================================================
+   🎨 ESTILOS BASE Y SIDEBAR
+   ======================================================== */
+/* =========================================================================
+   🎨 CSS PROYECTO SAAS - SIMETRÍA Y EQUILIBRIO PREMIUM (EZ-FIND GOODS)
+   ========================================================================= */
+
 /* 1. RESETEO Y BASES */
 *{
     margin: 0;
@@ -7,258 +23,326 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* 2. LAYOUT PRINCIPAL (Flexbox)*/
+/* 2. LAYOUT PRINCIPAL */
 .app-container{
-    display: flex; /*Ponemos Sidebar y chat en fila*/
-    height: 100vh; /*Ocupar el 100% de la altura de la ventana*/
-    overflow: hidden; /*Evita que la web entera haga scroll*/
+    display: flex; 
+    height: 100vh; 
+    overflow: hidden; 
+    background-color: #ffffff;
 }
 
 /* 3. SIDEBAR (Barra lateral) */
 .sidebar{
-    width: 260px; /*Ancho fijo para el menú */
-    background-color: #202123; /*Color oscuro tipo CHATGPT*/
-    color: white;
+    width: 280px; 
+    background-color: #ffffff;
+    color: #1e293b;
     display: flex;
-    flex-direction: column; /*Los elementos del menú van*/
-    justify-content: space-between; /*Logo arriba, perfil abajo*/
-    padding: 15px;
+    flex-direction: column; 
+    justify-content: space-between; 
+    padding: 24px 20px;
+    flex-shrink: 0;
+    border-right: 1px solid #e2e8f0;
 }
 
-.menu-lateral button{
+.logo-area {
+    padding: 5px;
+    margin-bottom: 30px;
+}
+
+.logo-area h2 {
+    color: #29bbe3; 
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.logo-area p {
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-top: 2px;
+    font-weight: 600;
+}
+
+/* Estilo definitivo para el logo ubicado en el fondo blanco de la barra lateral */
+.sidebar-logo {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+}
+
+.menu-lateral {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 🌟 REFACCIÓN: "Monitoreo reciente" ahora es más grande y simétrico al botón */
+.historial-titulo {
+    font-size: 0.8rem; /* Agrandado ligeramente el texto */
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #fd601d; 
+    background-color: rgba(253, 96, 29, 0.15); 
+    border: 1px solid rgba(253, 96, 29, 0.35); 
+    font-weight: 800;
+    margin-bottom: 20px; /* Más separación con la lista */
+    padding: 12px 18px; /* Agrandado el marco interno para igualar al botón */
+    border-radius: 20px; /* 🌟 CURVATURA IDÉNTICA al botón (Forma de píldora) */
+    text-align: center; /* Centrado para que juegue mejor con la estética de botón */
+    display: inline-block;
     width: 100%;
-    padding: 12px;
-    background: transparent;
-    border: 1px solid #4d4d4f;
-    color: white;
-    border-radius: 5px;
     cursor: pointer;
-    margin-bottom: 20px;
+    transition: all 0.25s ease;
+}
+
+/* Hover de Monitoreo Reciente */
+.historial-titulo:hover {
+    background-color: rgba(41, 187, 227, 0.15); 
+    border-color: rgba(41, 187, 227, 0.4);
+    color: #29bbe3; 
 }
 
 .historial ul {
-    margin-top: 10px;
-    padding-left: 20px;
+    list-style: none;
+    padding-left: 0;
 }
 
 .historial li {
-    margin-bottom: 8px;
-}
-
-/* 4. AREA DE CHAT (Zona Central) */
-
-.chat-area{
-    flex-grow: 1; /*Ocupa TODO el espacio restante de la pantalla*/
-    display: flex;
-    flex-direction: column; /*Cabecera arriba, mensajes centro, input abajo*/
-    background-color: #343541;
-}
-
-.chat-header{
-    padding: 15px;
-    border-bottom: 1px solid #4d4d4f;
-    color: #ececf1;
-    text-align: center;
-}
-
-.controles-filtros {
-    text-align: center;
-    padding: 10px;
-    background-color: #202123;
-    border-bottom: 1px solid #4d4d4f;
-
-}
-
-.controles-filtros button {
-    background: #444654;
-    color: white;
-    border: 1px solid #565869;
-    padding: 8px 15px;
-    margin: 0 5px;
-    border-radius: 5px;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+    color: #334155;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: 0.3s;
-}
-.controles-filtros button:hover {
-    background-color: #565869;
-}
-
-
-/* Modificamos el mensajes-container
-    - mensajes uno debajo del otro
-    - scroll vertical
-    - simulación real de chat
-*/
-.mensajes-container {
-    flex-grow: 1; /*Mensajes ocupan el centro*/
-    padding: 20px 40px;
     display: flex;
-    /* Se agrega el flex-direction : column por ser chat */
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+/* Hover en las frases del historial */
+.historial li:hover {
+    background-color: rgba(41, 187, 227, 0.1); 
+    color: #29bbe3; 
+}
+
+/* BOTÓN NUEVA INSTANCIA (Perfectamente emparejado en proporciones) */
+.menu-lateral button{
+    width: 100%;
+    padding: 12px;
+    background-color: rgba(253, 96, 29, 0.15); 
+    border: 1px solid rgba(253, 96, 29, 0.35); 
+    color: #fd601d; 
+    font-weight: 800;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 20px; /* Forma de píldora */
+    cursor: pointer;
+    margin-top: 25px;
+    transition: all 0.25s ease;
+}
+
+/* Hover del Botón */
+.menu-lateral button:hover {
+    background-color: rgba(41, 187, 227, 0.15); 
+    border-color: rgba(41, 187, 227, 0.4); 
+    color: #29bbe3; 
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(41, 187, 227, 0.15);
+}
+
+.perfil {
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.perfil-avatar {
+    width: 32px;
+    height: 32px;
+    background-color: #29bbe3;
+    color: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.8rem;
+}
+
+.perfil-info {
+    display: flex;
     flex-direction: column;
-    /*flex-start : cololar elementos al inicio del contenedor*/
+}
+
+.perfil-info .username {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.perfil-info .role {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+/* 4. AREA DE CHAT */
+.chat-area{
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column; 
+    background-color: #ffffff; 
+}
+
+.chat-header {
+    padding: 16px 24px;
+    background-color: #29bbe3; 
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(41, 187, 227, 0.15);
+}
+
+.chat-header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;                  /* Un pelín más de espacio simétrico */
+}
+
+/* 🌟 NUEVO STYLES: Control de tamaño y fusión transparente del Logo de Odoo */
+.chat-header-logo {
+    height: 36px;               /* Altura perfecta y estilizada */
+    width: auto;
+    object-fit: contain;
+    mix-blend-mode: normal;     /* Comportamiento normal */
+    filter: none;               /* Sin filtros de inversión ni contraste */
+}
+
+.chat-header h3 {
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.chat-header-status {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.05em;
+}
+
+.mensajes-container {
+    flex-grow: 1; 
+    padding: 30px 50px;
+    display: flex;
+    flex-direction: column;
     justify-content: flex-start;
-    /*strech los elementos ocupan el ancho disponible*/
     align-items: stretch;
     overflow-y: auto;
 }
 
-/*BURBUJAS*/
-.msg-usuario, .msg-ia {
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
+.msg-usuario, .msg-ia-bienvenida, .msg-ia {
+    padding: 16px 22px;
+    border-radius: 16px;
+    margin-bottom: 20px;
     max-width: 80%;
     width: fit-content;
     line-height: 1.5;
-    transition: all 0.3s ease;
-}
-
-/* La Burbuja de usuario se alinea a la derecha */
-.msg-usuario {
-    background-color: #19c37d ;
-    color: white;
-    align-self: flex-end;
-}
-/*Se alinea a la izquierda*/
-.msg-ia {
-    background-color: #444654;
-    color: #d1d1d1;
-    align-self: flex-start;
-}
-
-
-/*5. FORMULARIO DE ENTRADA (input)*/
-.input-area{
-    padding: 20px 40px;
-}
-
-.chat-form{
-    max-width: 700px;
-    margin: 0 auto; /*Centra el formulario en el medio*/
-    display: flex;/*El input y el boton en fila*/
-    background-color: #40414f;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-}
-
-.chat-form input {
-    flex-grow: 1; /* El input estira todo lo que puede*/
-    background-color: transparent;
-    border: none; /*Sin borde*/
-    color: white;
-    padding: 10px;
-    outline: none; /*Quita el borde azul al hacer click*/
-    /*Aumentamos el tamño de la letra del input*/
-    font-size: 1rem;
-}
-
-.chat-form button {
-    background-color: #19c37d;
-    color: white;
-    border: none;
-    padding: 5px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.chat-form button:hover {
-    opacity: 0.9;
-}
-/* sr-only ocultar elemente visualmente sin eliminarlo HTML */
-.sr-only {
-    /*position absolute - para mover libremente top left bottom etc*/
-    position: absolute;
-    /*Mueve muy lejos a la izquierda*/
-    left: -9999px;
-}
-
-/*Boton Peligro (Borrar)*/
-.controles-filtros .btn-peligro {
-    background-color: #e74c3c;
-    border: 1px solid #c0392b;
-}
-
-.controles-filtros .btn-peligro:hover {
-    background-color: #c0392b;
-}
-
-/*Boton Buscador  */
-.buscador-container {
-    text-align: center;
-    padding: 10px;
-    background-color: #202123;
-    border-bottom: 1px solid #4d4d4f;
-}
-
-.buscador-container input {
-    padding: 8px 15px;
-    border-radius: 4px;
-    border: none;
-    width: 60%;
-    max-width: 400px;
-    outline: none;
     font-size: 0.95rem;
 }
 
-.buscador-container button {
-    background-color: #19c37d;
+.msg-usuario {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    font-weight: 600;
+}
+
+.msg-ia-bienvenida, .msg-ia {
+    background-color: #ffffff;
+    color: #0f172a;
+    align-self: flex-start;
+    border: 2px solid #29bbe3; 
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 4px 12px rgba(41, 187, 227, 0.05);
+}
+
+.tag-sistema {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #29bbe3;
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* 5. FORMULARIO DE ENTRADA */
+.input-area{
+    padding: 24px 50px;
+    background-color: #ffffff;
+}
+
+.chat-form{
+    max-width: 900px; 
+    margin: 0 auto; 
+    display: flex;
+    align-items: center;
+    background: linear-gradient(90deg, #29bbe3 0%, #1da1c4 100%);
+    padding: 6px 10px;
+    border-radius: 25px; 
+    box-shadow: 0 4px 20px rgba(41, 187, 227, 0.25);
+}
+
+.chat-form input {
+    flex-grow: 1; 
+    background-color: transparent;
+    border: none; 
+    color: #ffffff; 
+    padding: 12px 16px;
+    outline: none; 
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.chat-form input::placeholder {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.chat-form button {
+    background-color: transparent;
     color: white;
     border: none;
-    padding: 8px 15px;
-    margin-left: 10px;
-    border-radius: 5px;
+    padding: 0 15px;
+    font-weight: 800;
+    font-size: 0.95rem;
     cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-}
-.buscador-container button:hover {
-    opacity: 0.9;
+    transition: opacity 0.2s ease;
 }
 
-/*MAGIA RESPONSIVE - ADAPTANDO EL CHAT A MÓVILES*/
+.chat-form button:hover {
+    opacity: 0.85;
+}
 
-/*Si la pantalla es de tamaño tablet
-o móvil (menos de 768px)
-*/
+.chat-form button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
 @media (max-width: 768px){
-    /*1. Ocultanos menu lateral*/
-    .sidebar {
-        /*Hace de que la barra 
-        desaparezca*/
-        display: none;
-    }
-    /*2. Damos mas espacio al texto del chat*/
-    .mensajes-container{
-        /*Reducir el padding*/
-        padding: 20px;
-    }
-    /*3. Ajustamos el formulario para que
-    quepa bien en pantallas estrechas*/
-    .input-area{
-        padding: 15px;
-    }
-    .chat-form {
-        padding: 5px;
-    }
-
-    .chat-form input{
-        font-size: 0.9rem; /*letra mas pequeña*/
-    }
-    .chat-form button{
-        padding: 8px 12px;/*boton mas compacto*/
-    }
-}
-
-@media (max-width:480px) {
-    .chat-header h3 {
-        font-size: 1.1rem; /*Achicamos el titulo superior*/
-    }
-
-    .msg-usuario, .msg-ia {
-        max-width: 90%;
-        font-size: 0.95rem;
-    }
-
+    .sidebar { display: none; }
+    .mensajes-container { padding: 20px; }
+    .input-area { padding: 15px; }
 }
