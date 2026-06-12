@@ -5,8 +5,6 @@
 import { useState } from 'react';
 import Mensaje from './Mensaje';
 
-// ✂️ BORRADO: Ya no importamos el logo aquí porque se movió al Sidebar
-
 function ChatArea() {
   
   // ==========================================
@@ -17,7 +15,7 @@ function ChatArea() {
   const [listaMensajes, setListaMensajes] = useState([
     { 
       rol: "ia", 
-      texto: "Hola. Soy OmniBot, tu agente de IA especializado en el ecosistema omnicanal de Ez-Find Goods. Estoy conectado en tiempo real con Odoo 18, BigBuy y TEMU Seller Marketplace. ¿Qué métricas de stock, márgenes de beneficio o estado de Cron Jobs deseas auditar hoy?" 
+      texto: "Hola. Soy OmniBot, tu agente de IA especializado en el ecosistema de nuestro Omnichannel Connector. Estoy conectado en tiempo real con el ERP, tus Proveedores y tu Marketplace. ¿Qué métricas de stock, márgenes de beneficio o estado de Cron Jobs deseas auditar hoy?" 
     }
   ]);
 
@@ -43,12 +41,23 @@ function ChatArea() {
         body: JSON.stringify({
           model: "llama-3.1-8b-instant",
           messages: [
-            { role: "system", content: "Eres OmniBot, un agente de IA ultra-especializado en la gestión de e-commerce y conectores omnicanal de Ez-Find Goods. Tu conocimiento se basa en la sincronización en tiempo real entre BigBuy (catálogo y stock), Odoo 18 (ERP centralizador) y TEMU Seller Marketplace. Ayudas al usuario a entender problemas de inventario, optimización de márgenes de beneficio, estados de los Cron Jobs y logística automatizada. Tus respuestas deben ser profesionales, analíticas, corporativas y directas. Habla siempre en español." },
+            { 
+              role: "system", 
+              content: `Eres OmniBot, un consultor estratégico de nivel enterprise especializado en comercio electrónico global, gestión de negocios digitales y automatización omnicanal. 
+
+              Tu misión abarca:
+              1. ASESORÍA COMERCIAL Y LOGÍSTICA GLOBAL: Tienes un conocimiento profundo sobre estrategias de e-commerce, optimización de márgenes de beneficio, dinámicas de precios, gestión de catálogos y toda la cadena de suministro. Puedes resolver dudas sobre la gestión logística completa, desde el momento en que se procesa una compra hasta la entrega final del producto al cliente.
+              2. CONTROL DEL OMNICHANNEL CONNECTOR: Entiendes a la perfección los flujos de sincronización en tiempo real, las automatizaciones de procesos, el estado de los Cron Jobs, el procesamiento de colas (jobs) y la integración operativa entre el ERP central, los Proveedores y los Marketplaces de destino.
+
+              Directrices de estilo:
+              - Responde siempre de forma profesional, analítica, corporativa, directa y proactiva.
+              - Habla siempre en español.` 
+            },
             { role: "user", content: promptUsuario }
           ],
           temperature: 0.7
         })
-      });
+      }); // 🌟 ¡CORREGIDO! Paréntesis y llave de cierre del fetch colocados correctamente
 
       const datos = await respuesta.json();
       
@@ -82,9 +91,6 @@ function ChatArea() {
       {/* Cabecera Superior con Fondo Azul Cian */}
       <header className="chat-header">
         <div className="chat-header-title">
-          
-          {/* ✂️ BORRADO: Quitamos la etiqueta <img> para que el logo no aparezca en la barra azul */}
-          
           <h3>OmniBot Core</h3>
         </div>
         <span className="chat-header-status">● SINCRONIZADO</span>
@@ -117,7 +123,7 @@ function ChatArea() {
           <input
             type="text"
             id="mensaje-input"
-            placeholder="Pregúntame sobre BigBuy, TEMU o Odoo..."
+            placeholder="Pregúntame sobre tus Proveedores, Marketplace o ERP..."
             autoComplete="off"
             value={textoInput}
             onChange={(evento) => setTextoInput(evento.target.value)}
@@ -127,7 +133,7 @@ function ChatArea() {
       </footer>
 
     </main>
-  )
+  );
 }
 
 export default ChatArea;
