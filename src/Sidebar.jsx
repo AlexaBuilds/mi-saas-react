@@ -32,18 +32,18 @@ function Sidebar() {
                     <p className="historial-titulo">Monitoreo reciente</p>
                     
                     <ul>
-                        {/* Removida la clase active de aquí para dejar los ítems en su estado light limpio */}
+                        {/* 🌟 ACTUALIZADO: Eliminadas todas las marcas comerciales externas */}
                         <li>
-                            <span>🔍</span> Sincronización Stock BigBuy
+                            <span>🔍</span> Sincronización Stock Proveedores
                         </li>
                         <li>
-                            <span>🔍</span> Errores API en TEMU Marketplace
+                            <span>🔍</span> Errores API en Marketplace
                         </li>
                         <li>
-                            <span>🔍</span> Verificación Cron Jobs Odoo 18
+                            <span>🔍</span> Verificación Cron Jobs ERP
                         </li>
                         <li>
-                            <span>🔍</span> Optimización Márgenes B2B
+                            <span>🔍</span> Optimización Márgenes Ecommerce
                         </li>
                     </ul>
                 </div>
