@@ -341,6 +341,98 @@
     cursor: not-allowed;
 }
 
+/* ========================================================
+   🎙️ CONTROLES DE AUDIO PREMIUM (ESTILO FINO Y ELEGANTE)
+   ======================================================== */
+.contenedor-audio-ia {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+/* Botón "Escuchar" refinado: más estilizado y sutil */
+.btn-audio-ia {
+    padding: 4px 12px; /* Reducido para hacerlo más plano y fino */
+    background-color: rgba(253, 96, 29, 0.05); /* Fondo mucho más suave */
+    border: 1px solid rgba(253, 96, 29, 0.2); /* Borde fino de 1px con baja opacidad */
+    color: #fd601d; 
+    font-weight: 600; /* Texto seminegrita, menos grueso */
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-radius: 12px; /* Curvatura más elegante y menos exagerada */
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-audio-ia:hover {
+    background-color: rgba(41, 187, 227, 0.08); 
+    border-color: rgba(41, 187, 227, 0.3); 
+    color: #29bbe3; 
+    transform: translateY(-0.5px); /* Micro-interacción más suave */
+    box-shadow: 0 2px 6px rgba(41, 187, 227, 0.08);
+}
+
+/* Estado Detener (Fino y limpio) */
+.btn-audio-ia.detener {
+    background-color: rgba(239, 68, 68, 0.04);
+    border-color: rgba(239, 68, 68, 0.25);
+    color: #ef4444;
+}
+
+.btn-audio-ia.detener:hover {
+    background-color: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #dc2626;
+}
+
+/* Selector de Voz Premium */
+.select-audio-ia {
+    padding: 4px 10px; /* Alineado al tamaño fino del botón */
+    background-color: rgba(253, 96, 29, 0.02); 
+    border: 1px solid rgba(0, 0, 0, 0.08); /* Borde ultraligero */
+    color: #475569; /* Gris pizarra suave corporativo */
+    font-weight: 600;
+    font-size: 0.72rem;
+    border-radius: 12px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.select-audio-ia:hover {
+    background-color: rgba(41, 187, 227, 0.05); 
+    border-color: rgba(41, 187, 227, 0.3); 
+    color: #29bbe3; 
+}
+
+/* Control deslizante de Tono */
+.wrapper-tono-ia {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.68rem;
+    color: #94a3b8; /* Tono de gris más atenuado */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-left: 4px;
+}
+
+.slider-tono-ia {
+    accent-color: #fd601d; 
+    cursor: pointer;
+    width: 45px; /* Más compacto */
+    height: 3px; /* Barra del slider más delgada */
+    transition: all 0.2s ease;
+}
+
+.slider-tono-ia:hover {
+    accent-color: #29bbe3; 
+}
+
 @media (max-width: 768px){
     .sidebar { display: none; }
     .mensajes-container { padding: 20px; }

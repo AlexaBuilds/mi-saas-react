@@ -2,7 +2,7 @@
 // COMPONENTE: ChatArea (Zona derecha principal)
 // ==========================================
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Mensaje from './Mensaje';
 
 function ChatArea() {
@@ -11,7 +11,6 @@ function ChatArea() {
   // 🧠 ZONA DE MEMORIA (ESTADOS)
   // ==========================================
   const [textoInput, setTextoInput] = useState("");
-
   const [listaMensajes, setListaMensajes] = useState([
     { 
       rol: "ia", 
@@ -19,12 +18,69 @@ function ChatArea() {
     }
   ]);
 
+  // Estados para la humanización de la voz
+  const [voces, setVoces] = useState([]);
+  const [vozIndex, setVozIndex] = useState(0);
+  const [tono, setTono] = useState(1.0); 
+  const [indiceMensajeHablando, setIndiceMensajeHablando] = useState(null); // Guarda qué mensaje exacto está sonando
+
+  // ==========================================
+  // 🎙️ CARGA DINÁMICA DE VOCES HUMANIZADAS
+  // ==========================================
+  useEffect(() => {
+    const cargarVocesDisponibles = () => {
+      const todasLasVoces = window.speechSynthesis.getVoices();
+      const vocesEspañol = todasLasVoces.filter(voz => voz.lang.startsWith('es'));
+      setVoces(vocesEspañol);
+    };
+
+    cargarVocesDisponibles();
+    window.speechSynthesis.onvoiceschanged = cargarVocesDisponibles;
+
+    return () => window.speechSynthesis.cancel();
+  }, []);
+
+  // ==========================================
+  // 🔊 MOTOR DE SÍNTESIS DE VOZ CONFIGURABLE (PLAY / STOP)
+  // ==========================================
+  const toggleVoz = (texto, indice) => {
+    // Si el mensaje actual ya está sonando, lo detenemos
+    if (indiceMensajeHablando === indice) {
+      window.speechSynthesis.cancel();
+      setIndiceMensajeHablando(null);
+      return;
+    }
+
+    // Detener cualquier otra lectura activa e iniciar la nueva
+    window.speechSynthesis.cancel(); 
+    const enunciado = new SpeechSynthesisUtterance(texto);
+    
+    if (voces[vozIndex]) {
+      enunciado.voice = voces[vozIndex];
+    } else {
+      enunciado.lang = 'es-ES';
+    }
+
+    enunciado.rate = 1.0; 
+    enunciado.pitch = tono; 
+
+    // Control dinámico de los botones individuales
+    enunciado.onstart = () => setIndiceMensajeHablando(indice);
+    enunciado.onend = () => setIndiceMensajeHablando(null);
+    enunciado.onerror = () => setIndiceMensajeHablando(null);
+
+    window.speechSynthesis.speak(enunciado);
+  };
+
   // ==========================================
   // ⚙️ ZONA DE LÓGICA (ACCIONES - NETLIFY FUNCTIONS)
   // ==========================================
   const manejarEnvio = async (evento) => {
     evento.preventDefault();
     if (textoInput.trim() === "") return;
+
+    window.speechSynthesis.cancel();
+    setIndiceMensajeHablando(null);
 
     const promptUsuario = textoInput;
     const mensajeUsuario = { rol: "usuario", texto: promptUsuario };
@@ -57,7 +113,7 @@ function ChatArea() {
           ],
           temperature: 0.7
         })
-      }); // 🌟 ¡CORREGIDO! Paréntesis y llave de cierre del fetch colocados correctamente
+      });
 
       const datos = await respuesta.json();
       
@@ -67,7 +123,7 @@ function ChatArea() {
 
       const textoIA = datos.choices[0].message.content;
       const mensajeIA = { rol: "ia", texto: textoIA };
-      
+
       setListaMensajes((listaActual) => {
         const listaSinPensando = listaActual.slice(0, -1);
         return [...listaSinPensando, mensajeIA];
@@ -83,12 +139,12 @@ function ChatArea() {
   };
 
   // ==========================================
-  // 🎨 ZONA VISUAL (CUMPLIENDO LA OPCIÓN SELECCIONADA)
+  // 🎨 ZONA VISUAL
   // ==========================================
   return (
     <main className="chat-area">
       
-      {/* Cabecera Superior con Fondo Azul Cian */}
+      {/* Cabecera Superior (Original e Intacta) */}
       <header className="chat-header">
         <div className="chat-header-title">
           <h3>OmniBot Core</h3>
@@ -96,28 +152,104 @@ function ChatArea() {
         <span className="chat-header-status">● SINCRONIZADO</span>
       </header>
 
-      {/* Contenedor de burbujas enmarcadas en Azul Cian */}
+      {/* Contenedor de burbujas enmarcadas */}
       <section className="mensajes-container" id="caja-mensajes">
         {listaMensajes.map((msg, indice) => {
+          
+          const estaHablandoEsteMensaje = indiceMensajeHablando === indice;
+
+          // Mensaje de bienvenida de la IA
           if (msg.rol === "ia" && indice === 0) {
             return (
               <div key={indice} className="msg-ia-bienvenida">
                 <span className="tag-sistema">OmniBot</span>
                 <p>{msg.texto}</p>
+                
+                {/* 🎛️ PANEL DE AUDIO ESTILIZADO BAJO LA BURBUJA */}
+                <div className="contenedor-audio-ia">
+                  <button 
+                    type="button" 
+                    onClick={() => toggleVoz(msg.texto, indice)}
+                    className={`btn-audio-ia ${estaHablandoEsteMensaje ? 'detener' : ''}`}
+                  >
+                    {estaHablandoEsteMensaje ? "🛑 Detener" : "📢 Escuchar"}
+                  </button>
+
+                  <select 
+                    value={vozIndex} 
+                    onChange={(e) => setVozIndex(Number(e.target.value))}
+                    className="select-audio-ia"
+                  >
+                    {voces.map((voz, index) => (
+                      <option key={index} value={index}>🗣️ {voz.name.replace('Microsoft', '').replace('Google', '')}</option>
+                    ))}
+                  </select>
+
+                  <div className="wrapper-tono-ia">
+                    <span>Tono</span>
+                    <input 
+                      type="range" 
+                      min="0.6" 
+                      max="1.4" 
+                      step="0.1" 
+                      value={tono} 
+                      onChange={(e) => setTono(Number(e.target.value))}
+                      className="slider-tono-ia"
+                    />
+                  </div>
+                </div>
+
               </div>
             );
           }
 
+          // Mensajes normales del flujo del chat
           return (
             <div key={indice} className={msg.rol === "usuario" ? "msg-usuario" : "msg-ia"}>
               {msg.rol === "ia" && <span className="tag-sistema">OmniBot</span>}
               <p>{msg.texto}</p>
+              
+              {/* 🎛️ PANEL DE AUDIO ESTILIZADO BAJO LA BURBUJA (Solo IA completa) */}
+              {msg.rol === "ia" && msg.texto !== "Procesando a la velocidad de la luz..." && (
+                <div className="contenedor-audio-ia">
+                  <button 
+                    type="button" 
+                    onClick={() => toggleVoz(msg.texto, indice)}
+                    className={`btn-audio-ia ${estaHablandoEsteMensaje ? 'detener' : ''}`}
+                  >
+                    {estaHablandoEsteMensaje ? "🛑 Detener" : "📢 Escuchar"}
+                  </button>
+
+                  <select 
+                    value={vozIndex} 
+                    onChange={(e) => setVozIndex(Number(e.target.value))}
+                    className="select-audio-ia"
+                  >
+                    {voces.map((voz, index) => (
+                      <option key={index} value={index}>🗣️ {voz.name.replace('Microsoft', '').replace('Google', '')}</option>
+                    ))}
+                  </select>
+
+                  <div className="wrapper-tono-ia">
+                    <span>Tono</span>
+                    <input 
+                      type="range" 
+                      min="0.6" 
+                      max="1.4" 
+                      step="0.1" 
+                      value={tono} 
+                      onChange={(e) => setTono(Number(e.target.value))}
+                      className="slider-tono-ia"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
       </section>
 
-      {/* Formulario Inferior - Barra Ancha en Degradado Azul Píldora */}
+      {/* Formulario Inferior (Original e Intacto) */}
       <footer className="input-area">
         <form className="chat-form" onSubmit={manejarEnvio}>
           <input
