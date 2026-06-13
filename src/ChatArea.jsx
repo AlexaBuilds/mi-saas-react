@@ -22,7 +22,8 @@ function ChatArea() {
   const [voces, setVoces] = useState([]);
   const [vozIndex, setVozIndex] = useState(0);
   const [tono, setTono] = useState(1.0); 
-  const [indiceMensajeHablando, setIndiceMensajeHablando] = useState(null); // Guarda qué mensaje exacto está sonando
+  const [indiceMensajeHablando, setIndiceMensajeHablando] = useState(null); 
+  const [audioDesbloqueado, setAudioDesbloqueado] = useState(false); // 🔥 Control de seguridad móvil
 
   // ==========================================
   // 🎙️ CARGA DINÁMICA DE VOCES HUMANIZADAS
@@ -41,53 +42,72 @@ function ChatArea() {
   }, []);
 
   // ==========================================
-  // 🔊 MOTOR DE AUDIO (OPTIMIZADO PARA PC Y MÓVILES)
+  // 🔥 DISPARADOR DE DESBLOQUEO INMEDIATO (MÓVILES)
+  // ==========================================
+  const desbloquearAudioMovil = () => {
+    if (audioDesbloqueado) return;
+    
+    try {
+      // Emitimos un string vacío instantáneo para que el móvil valide la interacción física
+      const interaccionFalsa = new SpeechSynthesisUtterance("");
+      interaccionFalsa.volume = 0; // Completamente mudo
+      window.speechSynthesis.speak(interaccionFalsa);
+      setAudioDesbloqueado(true);
+      console.log("🚀 Canal de voz desbloqueado con éxito en tu móvil");
+    } catch (e) {
+      console.error("Error al pre-desbloquear audio:", e);
+    }
+  };
+
+  // ==========================================
+  // 🔊 MOTOR DE AUDIO UNIVERSAL (PC Y MÓVILES)
   // ==========================================
   const toggleVoz = (texto, indice) => {
-    // 1. Si ya está hablando el mismo mensaje, detenemos el audio inmediatamente
+    // Si el móvil aún no se ha desbloqueado, aprovechamos este clic real para hacerlo
+    if (!audioDesbloqueado) {
+      desbloquearAudioMovil();
+    }
+
     if (indiceMensajeHablando === indice) {
       window.speechSynthesis.cancel();
       setIndiceMensajeHablando(null);
       return;
     }
 
-    // 2. Parar cualquier intento previo de audio para desbloquear el canal del móvil
     window.speechSynthesis.cancel(); 
 
-    // 3. Crear el enunciado de texto
-    const enunciado = new SpeechSynthesisUtterance(texto);
-    
-    // 4. ASIGNACIÓN ROBUSTA DE VOZ (Evita el silencio en iOS/Android)
-    if (voces && voces[vozIndex]) {
-      enunciado.voice = voces[vozIndex];
-      enunciado.lang = voces[vozIndex].lang; // Forzamos a que coincida el código de idioma
-    } else {
-      enunciado.lang = 'es-ES'; // Fallback estándar si el móvil se satura
-    }
-
-    // 5. Ajustes de velocidad y tono (Finos y compatibles)
-    enunciado.rate = 1.0; 
-    enunciado.pitch = tono; 
-
-    // 6. Manejadores de estado reactivos
-    enunciado.onstart = () => setIndiceMensajeHablando(indice);
-    enunciado.onend = () => setIndiceMensajeHablando(null);
-    enunciado.onerror = (e) => {
-      console.error("Error en SpeechSynthesis del móvil:", e);
-      setIndiceMensajeHablando(null);
-    };
-
-    // 7. 🔥 PARCHE PARA MÓVILES: Forzar al navegador a procesar la acción de inmediato
-    try {
-      window.speechSynthesis.speak(enunciado);
+    // Pequeño retraso de 50ms para dar tiempo al canal de iOS/Android a limpiarse por completo
+    setTimeout(() => {
+      const enunciado = new SpeechSynthesisUtterance(texto);
       
-      /* Sub-parche para iOS/Safari: Si se queda colgado en estado "pausado" por restricción, lo forzamos */
-      if (window.speechSynthesis.paused) {
-        window.speechSynthesis.resume();
+      if (voces && voces[vozIndex]) {
+        enunciado.voice = voces[vozIndex];
+        enunciado.lang = voces[vozIndex].lang;
+      } else {
+        enunciado.lang = 'es-ES';
       }
-    } catch (error) {
-      console.error("Error crítico de reproducción en móvil:", error);
-    }
+
+      enunciado.rate = 0.95; // Bajado un 5% para que en móvil suene más natural y menos robótico
+      enunciado.pitch = tono; 
+
+      enunciado.onstart = () => setIndiceMensajeHablando(indice);
+      enunciado.onend = () => setIndiceMensajeHablando(null);
+      enunciado.onerror = (e) => {
+        console.error("Error en SpeechSynthesis:", e);
+        setIndiceMensajeHablando(null);
+      };
+
+      try {
+        window.speechSynthesis.speak(enunciado);
+        
+        // Si el móvil lo deja en pausa forzada en segundo plano, lo despertamos
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+      } catch (error) {
+        console.error("Error crítico en reproducción móvil:", error);
+      }
+    }, 50);
   };
 
   // ==========================================
@@ -160,9 +180,9 @@ function ChatArea() {
   // 🎨 ZONA VISUAL
   // ==========================================
   return (
-    <main className="chat-area">
+    <main className="chat-area" onClick={desbloquearAudioMovil}>
       
-      {/* Cabecera Superior (Original e Intacta) */}
+      {/* Cabecera Superior */}
       <header className="chat-header">
         <div className="chat-header-title">
           <h3>OmniBot Core</h3>
@@ -187,7 +207,7 @@ function ChatArea() {
                 <div className="contenedor-audio-ia">
                   <button 
                     type="button" 
-                    onClick={() => toggleVoz(msg.texto, indice)}
+                    onClick={(e) => { e.stopPropagation(); toggleVoz(msg.texto, indice); }}
                     className={`btn-audio-ia ${estaHablandoEsteMensaje ? 'detener' : ''}`}
                   >
                     {estaHablandoEsteMensaje ? "🛑 Detener" : "📢 Escuchar"}
@@ -232,7 +252,7 @@ function ChatArea() {
                 <div className="contenedor-audio-ia">
                   <button 
                     type="button" 
-                    onClick={() => toggleVoz(msg.texto, indice)}
+                    onClick={(e) => { e.stopPropagation(); toggleVoz(msg.texto, indice); }}
                     className={`btn-audio-ia ${estaHablandoEsteMensaje ? 'detener' : ''}`}
                   >
                     {estaHablandoEsteMensaje ? "🛑 Detener" : "📢 Escuchar"}
@@ -267,7 +287,7 @@ function ChatArea() {
         })}
       </section>
 
-      {/* Formulario Inferior (Original e Intacto) */}
+      {/* Formulario Inferior */}
       <footer className="input-area">
         <form className="chat-form" onSubmit={manejarEnvio}>
           <input
