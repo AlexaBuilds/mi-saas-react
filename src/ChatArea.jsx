@@ -41,35 +41,53 @@ function ChatArea() {
   }, []);
 
   // ==========================================
-  // 🔊 MOTOR DE SÍNTESIS DE VOZ CONFIGURABLE (PLAY / STOP)
+  // 🔊 MOTOR DE AUDIO (OPTIMIZADO PARA PC Y MÓVILES)
   // ==========================================
   const toggleVoz = (texto, indice) => {
-    // Si el mensaje actual ya está sonando, lo detenemos
+    // 1. Si ya está hablando el mismo mensaje, detenemos el audio inmediatamente
     if (indiceMensajeHablando === indice) {
       window.speechSynthesis.cancel();
       setIndiceMensajeHablando(null);
       return;
     }
 
-    // Detener cualquier otra lectura activa e iniciar la nueva
+    // 2. Parar cualquier intento previo de audio para desbloquear el canal del móvil
     window.speechSynthesis.cancel(); 
+
+    // 3. Crear el enunciado de texto
     const enunciado = new SpeechSynthesisUtterance(texto);
     
-    if (voces[vozIndex]) {
+    // 4. ASIGNACIÓN ROBUSTA DE VOZ (Evita el silencio en iOS/Android)
+    if (voces && voces[vozIndex]) {
       enunciado.voice = voces[vozIndex];
+      enunciado.lang = voces[vozIndex].lang; // Forzamos a que coincida el código de idioma
     } else {
-      enunciado.lang = 'es-ES';
+      enunciado.lang = 'es-ES'; // Fallback estándar si el móvil se satura
     }
 
+    // 5. Ajustes de velocidad y tono (Finos y compatibles)
     enunciado.rate = 1.0; 
     enunciado.pitch = tono; 
 
-    // Control dinámico de los botones individuales
+    // 6. Manejadores de estado reactivos
     enunciado.onstart = () => setIndiceMensajeHablando(indice);
     enunciado.onend = () => setIndiceMensajeHablando(null);
-    enunciado.onerror = () => setIndiceMensajeHablando(null);
+    enunciado.onerror = (e) => {
+      console.error("Error en SpeechSynthesis del móvil:", e);
+      setIndiceMensajeHablando(null);
+    };
 
-    window.speechSynthesis.speak(enunciado);
+    // 7. 🔥 PARCHE PARA MÓVILES: Forzar al navegador a procesar la acción de inmediato
+    try {
+      window.speechSynthesis.speak(enunciado);
+      
+      /* Sub-parche para iOS/Safari: Si se queda colgado en estado "pausado" por restricción, lo forzamos */
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+    } catch (error) {
+      console.error("Error crítico de reproducción en móvil:", error);
+    }
   };
 
   // ==========================================
