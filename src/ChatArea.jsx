@@ -69,9 +69,8 @@ function ChatArea() {
     const exito = desbloquearAudioMovil();
     if (exito) {
       setAudioHabilitado(true);
-      setTimeout(() => {
-        toggleVoz(listaMensajes[0].texto, 0);
-      }, 200);
+      // Ejecutamos la voz de forma síncrona e inmediata al pulsar el botón
+      toggleVoz(listaMensajes[0].texto, 0);
     }
   };
 
