@@ -42,72 +42,68 @@ function ChatArea() {
   }, []);
 
   // ==========================================
-  // 🔥 DISPARADOR DE DESBLOQUEO INMEDIATO (MÓVILES)
-  // ==========================================
-  const desbloquearAudioMovil = () => {
-    if (audioDesbloqueado) return;
-    
-    try {
-      // Emitimos un string vacío instantáneo para que el móvil valide la interacción física
-      const interaccionFalsa = new SpeechSynthesisUtterance("");
-      interaccionFalsa.volume = 0; // Completamente mudo
-      window.speechSynthesis.speak(interaccionFalsa);
-      setAudioDesbloqueado(true);
-      console.log("🚀 Canal de voz desbloqueado con éxito en tu móvil");
-    } catch (e) {
-      console.error("Error al pre-desbloquear audio:", e);
-    }
-  };
-
-  // ==========================================
-  // 🔊 MOTOR DE AUDIO UNIVERSAL (PC Y MÓVILES)
+  // 🔊 MOTOR DE AUDIO UNIVERSAL (PC Y MÓVILES) - VERSIÓN OPTIMIZADA
   // ==========================================
   const toggleVoz = (texto, indice) => {
-    // Si el móvil aún no se ha desbloqueado, aprovechamos este clic real para hacerlo
+    // 🔥 DESBLOQUEO INMEDIATO si aún no se ha hecho
     if (!audioDesbloqueado) {
       desbloquearAudioMovil();
     }
 
+    // Si ya está hablando este mensaje, lo detenemos
     if (indiceMensajeHablando === indice) {
       window.speechSynthesis.cancel();
       setIndiceMensajeHablando(null);
       return;
     }
 
-    window.speechSynthesis.cancel(); 
+    // Detenemos cualquier reproducción previa
+    window.speechSynthesis.cancel();
 
-    // Pequeño retraso de 50ms para dar tiempo al canal de iOS/Android a limpiarse por completo
-    setTimeout(() => {
-      const enunciado = new SpeechSynthesisUtterance(texto);
+    // 🚀 SIN setTimeout: Creamos y lanzamos el audio de forma SÍNCRONA
+    const enunciado = new SpeechSynthesisUtterance(texto);
+    
+    if (voces && voces[vozIndex]) {
+      enunciado.voice = voces[vozIndex];
+      enunciado.lang = voces[vozIndex].lang;
+    } else {
+      enunciado.lang = 'es-ES';
+    }
+
+    enunciado.rate = 0.95;
+    enunciado.pitch = tono;
+
+    // Eventos de control
+    enunciado.onstart = () => {
+      setIndiceMensajeHablando(indice);
+      console.log("🎙️ Reproducción iniciada en móvil/PC");
+    };
+    
+    enunciado.onend = () => {
+      setIndiceMensajeHablando(null);
+      console.log("✅ Reproducción finalizada");
+    };
+    
+    enunciado.onerror = (e) => {
+      console.error("❌ Error en SpeechSynthesis:", e);
+      setIndiceMensajeHablando(null);
+    };
+
+    // 🎯 LANZAMIENTO INMEDIATO (sin setTimeout)
+    try {
+      window.speechSynthesis.speak(enunciado);
       
-      if (voces && voces[vozIndex]) {
-        enunciado.voice = voces[vozIndex];
-        enunciado.lang = voces[vozIndex].lang;
-      } else {
-        enunciado.lang = 'es-ES';
-      }
-
-      enunciado.rate = 0.95; // Bajado un 5% para que en móvil suene más natural y menos robótico
-      enunciado.pitch = tono; 
-
-      enunciado.onstart = () => setIndiceMensajeHablando(indice);
-      enunciado.onend = () => setIndiceMensajeHablando(null);
-      enunciado.onerror = (e) => {
-        console.error("Error en SpeechSynthesis:", e);
-        setIndiceMensajeHablando(null);
-      };
-
-      try {
-        window.speechSynthesis.speak(enunciado);
-        
-        // Si el móvil lo deja en pausa forzada en segundo plano, lo despertamos
-        if (window.speechSynthesis.paused) {
+      // 🔥 FIX ESPECÍFICO PARA iOS: Si el motor se quedó en pausa, lo reactivamos
+      setTimeout(() => {
+        if (window.speechSynthesis.paused && !window.speechSynthesis.speaking) {
           window.speechSynthesis.resume();
         }
-      } catch (error) {
-        console.error("Error crítico en reproducción móvil:", error);
-      }
-    }, 50);
+      }, 100); // Solo 100ms DESPUÉS de speak(), no antes
+      
+    } catch (error) {
+      console.error("💥 Error crítico en reproducción:", error);
+      setIndiceMensajeHablando(null);
+    }
   };
 
   // ==========================================
