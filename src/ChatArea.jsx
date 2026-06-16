@@ -4,6 +4,7 @@
 
 import { useState, useEffect } from 'react';
 import Mensaje from './Mensaje';
+import ModalActivarVoz from './ModalActivarVoz';
 
 function ChatArea() {
   
@@ -24,6 +25,7 @@ function ChatArea() {
   const [tono, setTono] = useState(1.0); 
   const [indiceMensajeHablando, setIndiceMensajeHablando] = useState(null); 
   const [audioDesbloqueado, setAudioDesbloqueado] = useState(false); // 🔥 Control de seguridad móvil
+  const [audioHabilitado, setAudioHabilitado] = useState(false);
 
   // ==========================================
   // 🎙️ CARGA DINÁMICA DE VOCES HUMANIZADAS
@@ -40,6 +42,42 @@ function ChatArea() {
 
     return () => window.speechSynthesis.cancel();
   }, []);
+
+  // ==========================================
+  // 🔓 DESBLOQUEO DE AUDIO EN MÓVILES (RETORNA TRUE SI TUVO ÉXITO)
+  // ==========================================
+  const desbloquearAudioMovil = () => {
+    if (audioDesbloqueado) return true;
+    
+    try {
+      const interaccionFalsa = new SpeechSynthesisUtterance("");
+      interaccionFalsa.volume = 0;
+      window.speechSynthesis.speak(interaccionFalsa);
+      setAudioDesbloqueado(true);
+      console.log("🚀 Canal de voz desbloqueado con éxito");
+      return true;
+    } catch (e) {
+      console.error("Error al pre-desbloquear audio:", e);
+      return false;
+    }
+  };
+
+  // ==========================================
+  // 🎯 FUNCIONES PARA EL MODAL DE ACTIVACIÓN DE VOZ
+  // ==========================================
+  const handleActivarVozDesdeModal = () => {
+    const exito = desbloquearAudioMovil();
+    if (exito) {
+      setAudioHabilitado(true);
+      setTimeout(() => {
+        toggleVoz(listaMensajes[0].texto, 0);
+      }, 200);
+    }
+  };
+
+  const handleRechazarVoz = () => {
+    setAudioHabilitado(false);
+  };
 
   // ==========================================
   // 🔊 MOTOR DE AUDIO UNIVERSAL (PC Y MÓVILES) - VERSIÓN OPTIMIZADA
@@ -175,8 +213,14 @@ function ChatArea() {
   // ==========================================
   // 🎨 ZONA VISUAL
   // ==========================================
-  return (
+    return (
     <main className="chat-area" onClick={desbloquearAudioMovil}>
+      
+      {/* 🎙️ MODAL DE ACTIVACIÓN DE VOZ (SOLO MÓVILES) */}
+      <ModalActivarVoz 
+        onActivar={handleActivarVozDesdeModal}
+        onRechazar={handleRechazarVoz}
+      />
       
       {/* Cabecera Superior */}
       <header className="chat-header">
