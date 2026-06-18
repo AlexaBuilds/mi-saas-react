@@ -21,9 +21,9 @@ function Sidebar() {
                             alt="Omnichannel Logo" 
                             className="sidebar-logo" 
                         />
-                        <h2>OmniBot Core</h2>
+                        <h2>OmniBot</h2>
                     </div>
-                    <p>Ez-Find Goods</p>
+                    <p>Smart AI Operations</p>
                 </div>
                 
                 {/* Panel del Historial Reciente */}
@@ -34,16 +34,16 @@ function Sidebar() {
                     <ul>
                         {/* 🌟 ACTUALIZADO: Eliminadas todas las marcas comerciales externas */}
                         <li>
-                            <span>🔍</span> Sincronización Stock Proveedores
+                            <span>º</span> Sincronización Stock Proveedores
                         </li>
                         <li>
-                            <span>🔍</span> Errores API en Marketplace
+                            <span>º</span> Errores API En Marketplace
                         </li>
                         <li>
-                            <span>🔍</span> Verificación Cron Jobs ERP
+                            <span>º</span> Verificación Cron Jobs ERP
                         </li>
                         <li>
-                            <span>🔍</span> Optimización Márgenes Ecommerce
+                            <span>º</span> Optimización Márgenes Ecommerce
                         </li>
                     </ul>
                 </div>

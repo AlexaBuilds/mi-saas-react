@@ -224,7 +224,7 @@ function ChatArea() {
       {/* Cabecera Superior */}
       <header className="chat-header">
         <div className="chat-header-title">
-          <h3>OmniBot Core</h3>
+          <h3>OmniBot</h3>
         </div>
         <span className="chat-header-status">● SINCRONIZADO</span>
       </header>

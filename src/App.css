@@ -51,7 +51,7 @@
 
 .logo-area h2 {
     color: #29bbe3; 
-    font-size: 1.6rem;
+    font-size: 1.35rem; /* 🌟 Reducido de 1.6rem a 1.35rem para estilizarlo */
     font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -78,81 +78,102 @@
     flex-direction: column;
 }
 
-/* 🌟 REFACCIÓN: "Monitoreo reciente" ahora es más grande y simétrico al botón */
+/* =========================================================================
+   🎨 CLONACIÓN EXACTA: HISTORIAL CON EL ESTILO DE "+ INSTANCIA DE CHAT"
+   ========================================================================= */
+
+/* 1. SECCIÓN SUBTÍTULO (Monitoreo Reciente) */
 .historial-titulo {
-    font-size: 0.8rem; /* Agrandado ligeramente el texto */
+    font-size: 0.75rem; 
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: #fd601d; 
-    background-color: rgba(253, 96, 29, 0.15); 
-    border: 1px solid rgba(253, 96, 29, 0.35); 
     font-weight: 800;
-    margin-bottom: 20px; /* Más separación con la lista */
-    padding: 12px 18px; /* Agrandado el marco interno para igualar al botón */
-    border-radius: 20px; /* 🌟 CURVATURA IDÉNTICA al botón (Forma de píldora) */
-    text-align: center; /* Centrado para que juegue mejor con la estética de botón */
+    margin-bottom: 16px; 
+    padding: 10px 16px; 
     display: inline-block;
     width: 100%;
-    cursor: pointer;
-    transition: all 0.25s ease;
+    color: #64748b; /* Gris intermedio para jerarquía */
+    cursor: default; 
+    pointer-events: none;
 }
 
-/* Hover de Monitoreo Reciente */
-.historial-titulo:hover {
-    background-color: rgba(41, 187, 227, 0.15); 
-    border-color: rgba(41, 187, 227, 0.4);
-    color: #29bbe3; 
+/* 2. BOTÓN PRINCIPAL (+ Instancia de Chat - TU REFERENCIA PERFECTA) */
+.menu-lateral button {
+    width: 100%;
+    padding: 10px 16px; 
+    font-weight: 800;
+    font-size: 0.75rem; 
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 20px; 
+    cursor: pointer;
+    
+    margin-top: auto; 
+    margin-bottom: 20px;
+    
+    background-color: transparent;
+    border: none;
+    color: #29bbe3; /* Azul original */
+    
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* 🌟 Alineado a la izquierda como en la foto */
+    gap: 6px;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover del Botón Principal */
+.menu-lateral button:hover {
+    background-color: rgba(41, 187, 227, 0.06); 
+    color: #fd601d; /* Cambia a naranja */
+}
+
+/* Contenedor general del historial para desplazarlo hacia abajo */
+.historial {
+    /* 🌟 El truco: Empuja todo el bloque hacia la parte inferior */
+    margin-top: auto; 
+    margin-bottom: 24px; /* Espacio de cortesía antes del botón inferior */
 }
 
 .historial ul {
     list-style: none;
     padding-left: 0;
+    margin: 0;
 }
 
 .historial li {
-    margin-bottom: 4px;
-    font-size: 0.9rem;
-    color: #334155;
-    font-weight: 600;
-    padding: 10px 14px;
-    border-radius: 8px;
+    width: 100%;
+    margin-bottom: 8px; /* Un poco más de aire vertical entre cada frase */
+    
+    /* 🌟 Réplica exacta de la tipografía fina de tu imagen */
+    font-size: 0.85rem; 
+    font-weight: 400; /* Completamente ligero, sin relleno tosco */
+    text-transform: none; /* Minúsculas naturales */
+    letter-spacing: normal;
+    color: #334155; 
+    
+    /* 📐 Dimensiones físicas y alineación a la izquierda */
+    padding: 10px 16px; 
+    border-radius: 20px; 
+    background-color: transparent;
+    border: none;
+    
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 8px;
-    transition: all 0.2s ease;
+    justify-content: flex-start; 
+    gap: 12px; 
+    transition: all 0.2s ease-in-out; 
+    
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Hover en las frases del historial */
+/* Hover del Historial: Manteniendo el sutil fondo azul con texto naranja */
 .historial li:hover {
-    background-color: rgba(41, 187, 227, 0.1); 
-    color: #29bbe3; 
-}
-
-/* BOTÓN NUEVA INSTANCIA (Perfectamente emparejado en proporciones) */
-.menu-lateral button{
-    width: 100%;
-    padding: 12px;
-    background-color: rgba(253, 96, 29, 0.15); 
-    border: 1px solid rgba(253, 96, 29, 0.35); 
+    background-color: rgba(41, 187, 227, 0.06); 
     color: #fd601d; 
-    font-weight: 800;
-    font-size: 0.8rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    border-radius: 20px; /* Forma de píldora */
-    cursor: pointer;
-    margin-top: 25px;
-    transition: all 0.25s ease;
-}
-
-/* Hover del Botón */
-.menu-lateral button:hover {
-    background-color: rgba(41, 187, 227, 0.15); 
-    border-color: rgba(41, 187, 227, 0.4); 
-    color: #29bbe3; 
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(41, 187, 227, 0.15);
 }
 
 .perfil {
